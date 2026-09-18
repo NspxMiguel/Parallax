@@ -5,6 +5,13 @@ import Foundation
 struct AnthropicClient: ChatClient {
     let provider: Provider = .claude
 
+    /// Injected so the stream parser can be exercised without a network.
+    let session: URLSession
+
+    init(session: URLSession = .shared) {
+        self.session = session
+    }
+
     private let base = URL(string: "https://api.anthropic.com/v1")!
     private let version = "2023-06-01"
 
@@ -19,7 +26,7 @@ struct AnthropicClient: ChatClient {
     func models(apiKey: String) async throws -> [ModelInfo] {
         var request = request("models?limit=100", apiKey: apiKey)
         request.httpMethod = "GET"
-        let (data, response) = try await URLSession.shared.data(for: request)
+        let (data, response) = try await session.data(for: request)
         if let failure = failure(from: response, body: data) { throw failure }
 
         struct Page: Decodable {
@@ -51,7 +58,7 @@ struct AnthropicClient: ChatClient {
                         withJSONObject: body(for: request)
                     )
 
-                    let (bytes, response) = try await URLSession.shared.bytes(for: urlRequest)
+                    let (bytes, response) = try await session.bytes(for: urlRequest)
                     if let http = response as? HTTPURLResponse,
                         !(200..<300).contains(http.statusCode)
                     {
