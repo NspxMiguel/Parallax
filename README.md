@@ -47,6 +47,19 @@ xcodebuild -project Parallax.xcodeproj -scheme Parallax \
   -destination 'platform=visionOS Simulator,name=Apple Vision Pro' build
 ```
 
+One script does build, install, launch and screenshot against a booted (or
+freshly created) visionOS simulator:
+
+```bash
+scripts/run-simulator.sh
+```
+
+Logic tests run on the Mac, no simulator involved:
+
+```bash
+swift test
+```
+
 To check a translation without changing the system language, force one:
 
 ```bash
