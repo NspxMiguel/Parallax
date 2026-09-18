@@ -127,14 +127,19 @@ import Testing
         #expect(contents.first?["role"] as? String == "user")
     }
 
-    @Test func geminiListsOnlyStreamableModels() async throws {
+    /// Shapes copied from a real `GET /v1beta/models` response: the API lists
+    /// `generateContent` and never `streamGenerateContent`, so filtering on the
+    /// streaming name silently returns nothing.
+    @Test func geminiKeepsOnlyModelsThatCanHoldAConversation() async throws {
         MockURLProtocol.reset([
             .init(
                 body: """
                     {"models":[
                       {"name":"models/gemini-2.5-pro","displayName":"Gemini 2.5 Pro",
                        "outputTokenLimit":65536,
-                       "supportedGenerationMethods":["generateContent","streamGenerateContent"]},
+                       "supportedGenerationMethods":["generateContent","countTokens"]},
+                      {"name":"models/gemini-2.5-pro-preview-tts","displayName":"TTS",
+                       "supportedGenerationMethods":["generateContent","countTokens"]},
                       {"name":"models/text-embedding-004","displayName":"Embedding",
                        "supportedGenerationMethods":["embedContent"]}
                     ]}
@@ -143,8 +148,7 @@ import Testing
         let client = GeminiClient(session: MockURLProtocol.session())
         let models = try await client.models(apiKey: "k")
 
-        #expect(models.count == 1)
-        #expect(models.first?.id == "gemini-2.5-pro")
+        #expect(models.map(\.id) == ["gemini-2.5-pro"])
         #expect(models.first?.maxOutputTokens == 65536)
     }
 }

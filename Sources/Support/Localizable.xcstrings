@@ -1,6 +1,23 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "action.cancel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar"
+          }
+        }
+      }
+    },
     "action.copied": {
       "extractionState": "manual",
       "localizations": {
@@ -82,6 +99,23 @@
           "stringUnit": {
             "state": "translated",
             "value": "Nova conversa"
+          }
+        }
+      }
+    },
+    "action.paste": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Paste"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Colar"
           }
         }
       }
@@ -460,6 +494,57 @@
         }
       }
     },
+    "pairing.received": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ connected"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ conectada"
+          }
+        }
+      }
+    },
+    "pairing.start": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receive keys from the Mac"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receber as chaves do Mac"
+          }
+        }
+      }
+    },
+    "pairing.waiting": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Run the command below on your Mac. The code expires in 3 minutes."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rode o comando abaixo no seu Mac. O código expira em 3 minutos."
+          }
+        }
+      }
+    },
     "settings.activeProvider": {
       "extractionState": "manual",
       "localizations": {
@@ -643,6 +728,40 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld modelos disponíveis"
+          }
+        }
+      }
+    },
+    "settings.pairing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "From your Mac"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Do seu Mac"
+          }
+        }
+      }
+    },
+    "settings.pairing.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Neither assistant lets another app sign in with your personal account, so the keys come from the Mac that already holds them — over your own network, and only while this code is on screen."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhuma das duas IAs deixa outro app entrar com a sua conta, então as chaves vêm do Mac que já as guarda — pela sua própria rede, e só enquanto este código está na tela."
           }
         }
       }

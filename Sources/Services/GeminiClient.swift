@@ -38,9 +38,19 @@ struct GeminiClient: ChatClient {
             let models: [Entry]
         }
         let page = try JSONDecoder().decode(Page.self, from: data)
+        // The API advertises `generateContent` and never `streamGenerateContent`,
+        // even though streaming works on the same models — filtering on the
+        // streaming name returns an empty list. Speech and embedding models
+        // answer with audio or vectors, so they are no use in a chat.
         return
             page.models
-            .filter { $0.supportedGenerationMethods?.contains("streamGenerateContent") ?? true }
+            .filter { entry in
+                let methods = entry.supportedGenerationMethods ?? ["generateContent"]
+                guard methods.contains("generateContent"), !methods.contains("embedContent")
+                else { return false }
+                let id = entry.name.lowercased()
+                return !id.contains("-tts") && !id.contains("image") && !id.contains("embedding")
+            }
             .map {
                 let id = $0.name.replacingOccurrences(of: "models/", with: "")
                 return ModelInfo(

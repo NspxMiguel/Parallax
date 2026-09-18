@@ -24,6 +24,26 @@ leave the device Keychain.
 - **Conversations stored on device** as readable JSON; **API keys in the
   Keychain**, sent only to the API they belong to.
 
+## Getting the keys in, without typing them
+
+Neither assistant lets another app sign in with a personal account — Anthropic
+restricts subscription OAuth to its own surfaces, and Google's equivalent would
+need a scope covering an entire cloud project — so Parallax takes an API key.
+Typing one on a floating keyboard is miserable, so it does not ask you to:
+
+1. open **Settings › From your Mac** and tap *Receive keys from the Mac*;
+2. run the printed command on your Mac:
+
+```bash
+scripts/send-keys.sh <port> <code>
+```
+
+The keys are read from the Mac's login Keychain, sent over your own network to
+the code shown on the headset, and stored in the device Keychain. The listener
+answers one connection, then closes; the code expires after three minutes. Set
+`ANTHROPIC_KEY_SERVICE` / `GEMINI_KEY_SERVICE` if your keys live under different
+Keychain names. There is also a **Paste** button, for the Universal Clipboard.
+
 ## Requirements
 
 - visionOS 26 or later (Apple Vision Pro, or the simulator)

@@ -12,6 +12,8 @@ targets:
     platform: visionOS
     sources:
       - path: Sources
+        excludes:
+          - "Support/Info.plist"
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.parallax.app
@@ -22,6 +24,9 @@ targets:
         CURRENT_PROJECT_VERSION: "1"
         SWIFT_VERSION: "6.0"
         GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_FILE: Sources/Support/Info.plist
+        INFOPLIST_KEY_NSLocalNetworkUsageDescription: "Parallax receives your API keys from your Mac over the local network, so you do not have to type them here."
+
         INFOPLIST_KEY_CFBundleDisplayName: Parallax
         INFOPLIST_KEY_NSHumanReadableCopyright: "(c) 2026 KeepOK"
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES

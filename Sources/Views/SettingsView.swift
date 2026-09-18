@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
@@ -17,6 +18,14 @@ struct SettingsView: View {
                     Text(Loc.s("settings.keys"))
                 } footer: {
                     Text(Loc.s("settings.keys.footer"))
+                }
+
+                Section {
+                    PairingRow()
+                } header: {
+                    Text(Loc.s("settings.pairing"))
+                } footer: {
+                    Text(Loc.s("settings.pairing.footer"))
                 }
 
                 Section(Loc.s("settings.conversation")) {
@@ -114,6 +123,18 @@ private struct ProviderKeyRow: View {
                     RoundedRectangle(cornerRadius: 16, style: .continuous)
                         .strokeBorder(Palette.hairline, lineWidth: 1)
                 )
+                .overlay(alignment: .trailing) {
+                    // Only while there is nothing to overlap: a filled key runs
+                    // the whole width of the field.
+                    if key.isEmpty, UIPasteboard.general.hasStrings {
+                        Button(Loc.s("action.paste")) {
+                            key = (UIPasteboard.general.string ?? "").trimmed
+                        }
+                        .buttonStyle(.borderless)
+                        .font(.system(size: 14))
+                        .padding(.trailing, 12)
+                    }
+                }
 
             HStack(spacing: 12) {
                 Button(Loc.s(saved ? "action.saved" : "action.save")) {
@@ -152,5 +173,83 @@ private struct ProviderKeyRow: View {
             key = settings.apiKey(for: provider) ?? ""
         }
         .onChange(of: key) { _, _ in saved = false }
+    }
+}
+
+/// Brings the keys over from the Mac that already holds them. This exists
+/// because neither assistant lets a third-party app sign in with a personal
+/// account, and typing a key on a floating keyboard is its own punishment.
+private struct PairingRow: View {
+    @Environment(AppSettings.self) private var settings
+    @Environment(ChatSession.self) private var session
+    @State private var pairing = PairingService()
+
+    private func bind() {
+        pairing.onKeys = { provider, key in
+            settings.setAPIKey(key, for: provider)
+            Task { await session.refreshModels(for: provider) }
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            switch pairing.state {
+            case .idle:
+                Button {
+                    bind()
+                    pairing.start()
+                } label: {
+                    Label(Loc.s("pairing.start"), systemImage: "laptopcomputer.and.arrow.down")
+                        .frame(minHeight: Metrics.touch)
+                }
+                .buttonStyle(.bordered)
+
+            case .listening(let code, let port):
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(code)
+                        .font(.system(size: 42, weight: .semibold, design: .monospaced))
+                        .tracking(6)
+                    Text(Loc.s("pairing.waiting"))
+                        .font(.system(size: 13))
+                        .foregroundStyle(.secondary)
+                    Text("scripts/send-keys.sh \(port)")
+                        .font(.system(size: 14, design: .monospaced))
+                        .textSelection(.enabled)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 10)
+                        .background(
+                            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                                .fill(.white.opacity(0.06))
+                        )
+                    Button(Loc.s("action.cancel")) { pairing.stop() }
+                        .buttonStyle(.borderless)
+                }
+
+            case .received(let providers):
+                Label(
+                    Loc.f(
+                        "pairing.received",
+                        providers.map(\.displayName).joined(separator: " + ")
+                    ),
+                    systemImage: "checkmark.circle.fill"
+                )
+                .foregroundStyle(Palette.gemini)
+
+            case .failed(let message):
+                Label(message, systemImage: "exclamationmark.triangle")
+                    .foregroundStyle(Palette.danger)
+                    .font(.system(size: 14))
+            }
+        }
+        .padding(.vertical, 6)
+        .onAppear {
+            #if DEBUG
+                if ProcessInfo.processInfo.environment["PARALLAX_PAIRING"] == "1" {
+                    bind()
+                    pairing.start()
+                }
+            #endif
+        }
+        .onDisappear { pairing.stop() }
     }
 }
