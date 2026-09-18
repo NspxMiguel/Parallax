@@ -8,10 +8,12 @@ struct ChatView: View {
         @Bindable var settings = settings
 
         Group {
-            if settings.configuredProviders.isEmpty {
-                WelcomeView()
-            } else if let conversation = session.current, !conversation.isEmpty {
+            // A conversation that already has content always wins: removing a
+            // key must not take the history away with it.
+            if let conversation = session.current, !conversation.isEmpty {
                 transcript(conversation)
+            } else if settings.configuredProviders.isEmpty {
+                WelcomeView()
             } else {
                 StartView()
             }

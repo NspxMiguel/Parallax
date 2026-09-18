@@ -11,7 +11,7 @@ struct RootView: View {
 
         NavigationSplitView(columnVisibility: $sidebar) {
             SidebarView(showSettings: $showSettings)
-                .navigationSplitViewColumnWidth(min: 260, ideal: 300, max: 360)
+                .navigationSplitViewColumnWidth(min: 300, ideal: 320, max: 380)
         } detail: {
             ChatView()
         }
@@ -23,6 +23,12 @@ struct RootView: View {
             SettingsView()
         }
         .task {
+            #if DEBUG
+                session.loadDebugFixtureIfRequested()
+                if ProcessInfo.processInfo.environment["PARALLAX_SCREEN"] == "settings" {
+                    showSettings = true
+                }
+            #endif
             await session.refreshAllModels()
         }
     }

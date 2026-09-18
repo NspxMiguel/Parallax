@@ -26,9 +26,6 @@ struct SidebarView: View {
         .listStyle(.sidebar)
         .navigationTitle(Loc.s("app.name"))
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                ParallaxMark(separated: settings.mode == .compare, size: 22)
-            }
             ToolbarItemGroup(placement: .topBarTrailing) {
                 Button {
                     session.newConversation()

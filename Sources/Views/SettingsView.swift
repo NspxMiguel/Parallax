@@ -98,9 +98,22 @@ private struct ProviderKeyRow: View {
                 }
             }
 
+            // A bare SecureField in a Form reads as grey label text — give it a
+            // shape so it looks like something you can type into.
             SecureField(Loc.s("settings.key.placeholder"), text: $key)
                 .textContentType(.password)
                 .autocorrectionDisabled()
+                .font(.system(size: 16, design: .monospaced))
+                .padding(.horizontal, 16)
+                .frame(minHeight: Metrics.touch)
+                .background(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .fill(.white.opacity(0.08))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .strokeBorder(Palette.hairline, lineWidth: 1)
+                )
 
             HStack(spacing: 12) {
                 Button(Loc.s(saved ? "action.saved" : "action.save")) {
