@@ -1,0 +1,37 @@
+name: Parallax
+options:
+  bundleIdPrefix: com.parallax
+  developmentLanguage: en
+  deploymentTarget:
+    visionOS: "26.0"
+  createIntermediateGroups: true
+
+targets:
+  Parallax:
+    type: application
+    platform: visionOS
+    sources:
+      - path: Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.parallax.app
+        CODE_SIGN_STYLE: Automatic
+        # The paid organisation team signed in on this Mac.
+        DEVELOPMENT_TEAM: SW36PU2B3T
+        MARKETING_VERSION: "0.1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Parallax
+        INFOPLIST_KEY_NSHumanReadableCopyright: "(c) 2026 KeepOK"
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        SWIFT_EMIT_LOC_STRINGS: YES
+
+schemes:
+  Parallax:
+    build:
+      targets:
+        Parallax: all
+    run:
+      config: Debug
